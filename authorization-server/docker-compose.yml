@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: authorization-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["java", "-jar", "app.jar"]
+    ports:
+      - "8084:8084"
+    env_file:
+      - ./.env

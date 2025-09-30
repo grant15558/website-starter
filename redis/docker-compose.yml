@@ -1,0 +1,11 @@
+services:
+  redis:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+        REDIS_USER: ${REDIS_USER}
+        REDIS_PASSWORD: ${REDIS_PASSWORD}
+    container_name: redis
+    ports:
+      - "6379:6379"

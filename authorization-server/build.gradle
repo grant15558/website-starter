@@ -1,0 +1,85 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.1'
+	id 'io.spring.dependency-management' version '1.1.4'
+	id 'application'
+
+}
+
+group = 'com.keplara'
+version = '0.0.1-SNAPSHOT'
+
+application {
+    mainClass = 'com.keplara.auth_service.AuthApplication'
+}
+
+java {
+	sourceCompatibility = '17'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	all {
+		exclude group: 'commons-logging', module: 'commons-logging'
+    }
+}
+
+repositories {
+	mavenCentral()
+}
+
+tasks.withType(JavaExec).configureEach {
+    environment 'REDIS_USER', System.getenv('REDIS_USER') ?: 'TestUser'
+	environment 'REDIS_HOST', System.getenv('REDIS_HOST') ?: 'host.docker.internal'
+    environment 'REDIS_PASSWORD', System.getenv('REDIS_PASSWORD') ?: 'TestUser'
+    environment 'MONGO_URI', System.getenv('MONGO_URI') ?: 'mongodb://localhost:27017/development'
+    environment 'JWT_KEY', System.getenv('JWT_KEY') ?: 'TestJWTKey'
+    environment 'JWT_PAYLOAD_KEY', System.getenv('JWT_PAYLOAD_KEY') ?: 'TestJWTPayloadKey'
+    environment 'PORT', System.getenv('PORT') ?: '8084'
+}
+
+dependencies {
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.0'
+
+	implementation 'software.amazon.awssdk:ses:2.28.20'
+	implementation 'software.amazon.awssdk:sdk-core:2.28.20'
+	implementation 'software.amazon.awssdk:auth:2.28.20'
+	implementation 'software.amazon.awssdk:s3:2.28.20'
+	implementation 'software.amazon.awssdk:regions:2.28.20'
+	implementation 'software.amazon.awssdk:utils:2.28.20'
+	implementation 'software.amazon.awssdk:services:2.28.20'
+	implementation 'software.amazon.awssdk:aws-core:2.28.20'
+	implementation 'jakarta.mail:jakarta.mail-api:2.1.3'
+	implementation 'software.amazon.awssdk:sesv2:2.28.20'
+	implementation 'software.amazon.awssdk:auth:2.28.20'
+	implementation 'org.springframework.session:spring-session-core:3.4.1'
+	implementation 'org.springframework.session:spring-session-data-redis:3.4.1'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'org.springframework.boot:spring-boot-starter-security:3.4.1'
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.4.1'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'redis.clients:jedis:5.1.2'
+
+	implementation 'com.sun.mail:javax.mail:1.6.0'
+	implementation 'javax.mail:javax.mail-api:1.6.2'
+	implementation 'org.hibernate.validator:hibernate-validator'
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+
+	implementation 'org.springframework.security:spring-security-oauth2-authorization-server:1.4.1'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+	implementation 'javax.servlet:servlet-api:2.5'
+	implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
