@@ -6,11 +6,11 @@ plugins {
 
 }
 
-group = 'com.keplara'
+group = 'com.mysite'
 version = '0.0.1-SNAPSHOT'
 
 application {
-    mainClass = 'com.keplara.auth_service.AuthApplication'
+    mainClass = 'com.mysite.auth_service.AuthApplication'
 }
 
 java {

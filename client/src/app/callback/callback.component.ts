@@ -25,7 +25,7 @@ export class CallbackComponent implements OnInit {
   }
 
   private exchangeCodeForTokens(code: string) {
-    const tokenEndpoint = 'https://auth.keplara.com/oauth/token'; // Token endpoint on the authorization server
+    const tokenEndpoint = 'https://auth.mysite.com/oauth/token'; // Token endpoint on the authorization server
     const clientId = 'Client';  // Client ID of the main client
     const clientSecret = 'Client-secret';  // Use the actual secret for your client
     const redirectUri = 'https://Client.com/callback';  // The callback URL you specified earlier

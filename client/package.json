@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:Keplara": "node ./dist/Keplara/server/server.mjs"
+    "serve:ssr:MySite": "node ./dist/MySite/server/server.mjs"
   },
   "private": true,
   "dependencies": {

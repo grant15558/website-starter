@@ -38,13 +38,13 @@ Windows install
 Run `Docker compose up -d redis --build` 
 
 Build image
-`docker build --rm -f ./Dockerfile.dev -t 010928192513.dkr.ecr.us-east-1.amazonaws.com/keplara/mongodb:dev .`
+`docker build --rm -f ./Dockerfile.dev -t 010928192513.dkr.ecr.us-east-1.amazonaws.com/mysite/mongodb:dev .`
 
 Run image locally
 ```bash
   docker run \
   -p 27018:27018 \
-  010928192513.dkr.ecr.us-east-1.amazonaws.com/keplara/mongodb:dev
+  010928192513.dkr.ecr.us-east-1.amazonaws.com/mysite/mongodb:dev
 ```
 
 Run 
@@ -53,7 +53,7 @@ ECR login before image push
 `aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 010928192513.dkr.ecr.us-east-1.amazonaws.com`
 
 Push image
-`docker push 010928192513.dkr.ecr.us-east-1.amazonaws.com/keplara/redis:staging`
+`docker push 010928192513.dkr.ecr.us-east-1.amazonaws.com/mysite/redis:staging`
 
 
 # Assume the role and capture the credentials

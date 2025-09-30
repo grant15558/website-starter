@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/Keplara",
+            "outputPath": "dist/MySite",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -95,10 +95,10 @@
           },
           "configurations": {
             "production": {
-              "buildTarget": "Keplara:build:production"
+              "buildTarget": "MySite:build:production"
             },
             "staging": {
-              "buildTarget": "Keplara:build:staging"
+              "buildTarget": "MySite:build:staging"
             },
             "development": {
               "buildTarget": "client:build:development"

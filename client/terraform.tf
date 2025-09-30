@@ -1,8 +1,8 @@
-# VPC: vpc-087c467583cbe6a78 / Keplara-vpc
-# arn:aws:ecs:us-east-1:010928192513:cluster/Keplara
+# VPC: vpc-087c467583cbe6a78 / MySite-vpc
+# arn:aws:ecs:us-east-1:010928192513:cluster/MySite
 # Terraform provider configuration
-# arn:aws:ecs:us-east-1:010928192513:service/Keplara/KeplaraClientProduction
-# arn:aws:ecs:us-east-1:010928192513:service/Keplara/KeplaraClientStaging
+# arn:aws:ecs:us-east-1:010928192513:service/MySite/MySiteClientProduction
+# arn:aws:ecs:us-east-1:010928192513:service/MySite/MySiteClientStaging
 # test-subnet-private1-us-east-1a
 # subnet-0bf018b468ce4a784
 # Available
@@ -43,10 +43,10 @@
 # -
 # No
 # 010928192513
-# Keplara-public-production-us-east-1a
+# MySite-public-production-us-east-1a
 # subnet-0b983fb751d2d54f9
 # Available
-# vpc-087c467583cbe6a78 | Keplara-vpc
+# vpc-087c467583cbe6a78 | MySite-vpc
 # Off
 # 172.0.0.0/22
 # –
@@ -55,7 +55,7 @@
 # us-east-1a
 # use1-az1
 # us-east-1
-# rtb-05101f4e8285fce81 | Keplara-rtb-public
+# rtb-05101f4e8285fce81 | MySite-rtb-public
 # acl-09fab435f999aaaea
 # No
 # No
@@ -63,10 +63,10 @@
 # -
 # No
 # 010928192513
-# Keplara-public-production-us-east-1b
+# MySite-public-production-us-east-1b
 # subnet-0b7534ff3627e1705
 # Available
-# vpc-087c467583cbe6a78 | Keplara-vpc
+# vpc-087c467583cbe6a78 | MySite-vpc
 # Off
 # 172.0.16.0/22
 # –
@@ -75,7 +75,7 @@
 # us-east-1b
 # use1-az2
 # us-east-1
-# rtb-05101f4e8285fce81 | Keplara-rtb-public
+# rtb-05101f4e8285fce81 | MySite-rtb-public
 # acl-09fab435f999aaaea
 # No
 # No
@@ -83,10 +83,10 @@
 # -
 # No
 # 010928192513
-# Keplara-public-staging-us-east-1d
+# MySite-public-staging-us-east-1d
 # subnet-07a71a6b51b1fa0a0
 # Available
-# vpc-087c467583cbe6a78 | Keplara-vpc
+# vpc-087c467583cbe6a78 | MySite-vpc
 # Off
 # 172.0.5.0/24
 # –
@@ -95,7 +95,7 @@
 # us-east-1d
 # use1-az6
 # us-east-1
-# rtb-0512ddc0693b34530 | Keplara-public-staging-rtb
+# rtb-0512ddc0693b34530 | MySite-public-staging-rtb
 # acl-09fab435f999aaaea
 # No
 # No
@@ -103,10 +103,10 @@
 # -
 # No
 # 010928192513
-# Keplara-private1-us-east-1a
+# MySite-private1-us-east-1a
 # subnet-078f46bafc87dff00
 # Available
-# vpc-087c467583cbe6a78 | Keplara-vpc
+# vpc-087c467583cbe6a78 | MySite-vpc
 # Off
 # 172.0.128.0/22
 # –
@@ -116,7 +116,7 @@ provider "aws" {
 }
 
 resource "aws_ecs_cluster" "my_cluster" {
-  name = "Keplara" # Ensure this matches your actual ECS cluster name
+  name = "MySite" # Ensure this matches your actual ECS cluster name
   service_connect_defaults {
     namespace = "arn:aws:servicediscovery:us-east-1:010928192513:namespace/ns-ys66gqljqhrnedlg"
   }
@@ -127,7 +127,7 @@ resource "aws_ecs_cluster" "my_cluster" {
 }
 
 resource "aws_ecs_service" "my_service" {
-  name = "KeplaraClientProduction"
+  name = "MySiteClientProduction"
 
   availability_zone_rebalancing      = "ENABLED"
   desired_count                      = 1
@@ -140,10 +140,10 @@ resource "aws_ecs_service" "my_service" {
   # launch_type                        = "EC2"
   scheduling_strategy   = "REPLICA"
   wait_for_steady_state = true
-  task_definition       = "KeplaraClientProduction:17"
+  task_definition       = "MySiteClientProduction:17"
   capacity_provider_strategy {
     base              = 0
-    capacity_provider = "KeplaraCapacityProvider"
+    capacity_provider = "MySiteCapacityProvider"
     weight            = 1
   }
   deployment_circuit_breaker {
@@ -156,7 +156,7 @@ resource "aws_ecs_service" "my_service" {
   load_balancer {
     container_name   = "Client"
     container_port   = 80
-    target_group_arn = "arn:aws:elasticloadbalancing:us-east-1:010928192513:targetgroup/KeplaraClientProduction-tg/ae04ea2e63cdbc00"
+    target_group_arn = "arn:aws:elasticloadbalancing:us-east-1:010928192513:targetgroup/MySiteClientProduction-tg/ae04ea2e63cdbc00"
   }
 
   network_configuration {

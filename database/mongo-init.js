@@ -5,10 +5,10 @@ db.createUser({
   roles: [{ role: 'root', db: 'admin' }]
 });
 
-db = db.getSiblingDB('keplara');
-db.createCollection('keplara');
-db.keplara.insertOne({ hello: "world" })
-db.keplara.insertOne({ message: "This is a test document" });
-db.keplara.insertOne({ status: "initialized" });
-db.keplara.insertOne({ version: "1.0.0" });
-db.keplara.insertOne({ timestamp: new Date() });
+db = db.getSiblingDB('mysite');
+db.createCollection('mysite');
+db.mysite.insertOne({ hello: "world" })
+db.mysite.insertOne({ message: "This is a test document" });
+db.mysite.insertOne({ status: "initialized" });
+db.mysite.insertOne({ version: "1.0.0" });
+db.mysite.insertOne({ timestamp: new Date() });
