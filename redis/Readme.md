@@ -102,3 +102,10 @@ $env:AWS_ACCESS_KEY_ID = ($creds | ConvertFrom-Json).Credentials.AccessKeyId
 $env:AWS_SECRET_ACCESS_KEY = ($creds | ConvertFrom-Json).Credentials.SecretAccessKey
 $env:AWS_SESSION_TOKEN = ($creds | ConvertFrom-Json).Credentials.SessionToken
 ```
+
+
+### Connect to redis: 
+
+```
+redis-cli -u redis://Supervisor:Supervisor@localhost:63791
+```
