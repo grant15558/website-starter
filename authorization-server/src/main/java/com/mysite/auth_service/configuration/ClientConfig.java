@@ -27,17 +27,17 @@ public class ClientConfig {
 	public RedisRegisteredClientRepository registeredClientRepository(RedisTemplate<String, RegisteredClient> redisTemplate) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 // Will not work register auth clients manually
-		RegisteredClient clientDeveloperRegistrar = RegisteredClient.withId(UUID.randomUUID().toString())
-				.clientId("internal-registrar-client")
-				.clientSecret("{bcrypt}"+passwordEncoder.encode(secret))
-				.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-				.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-				.scope("client.create")	
-				.scope("client.read")
-				.clientSettings(ClientSettings.builder()
-				        .requireAuthorizationConsent(false)
-				.build())
-				.build();
+		// RegisteredClient clientDeveloperRegistrar = RegisteredClient.withId(UUID.randomUUID().toString())
+		// 		.clientId("internal-registrar-client")
+		// 		.clientSecret("{bcrypt}"+passwordEncoder.encode(secret))
+		// 		.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+		// 		.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+		// 		.scope("client.create")	
+		// 		.scope("client.read")
+		// 		.clientSettings(ClientSettings.builder()
+		// 		        .requireAuthorizationConsent(false)
+		// 		.build())
+		// 		.build();
 
 		RegisteredClient authClientMain = RegisteredClient.withId(UUID.randomUUID().toString())
 		.clientId("auth-client")
@@ -67,6 +67,7 @@ public class ClientConfig {
 			.build())
 		.build();
 
+		// admin auth client
 		return new RedisRegisteredClientRepository(redisTemplate, authClientMain);
 	}
 

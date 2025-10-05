@@ -118,35 +118,34 @@ public class OAuth2SecurityConfig {
 		});
 	}
 
-    @Bean
-    OAuth2TokenCustomizer<JwtEncodingContext> jwtTokenCustomizer() {
-    return (context) -> {
+  @Bean
+	OAuth2TokenCustomizer<JwtEncodingContext> jwtTokenCustomizer() {	
+    return context -> {
         if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
-            context.getClaims().claims((claims) -> {
+            context.getClaims().claims(claims -> {
+                
+                // Extract roles (ROLE_ prefixed authorities)
                 Set<String> roles = AuthorityUtils.authorityListToSet(context.getPrincipal().getAuthorities())
                         .stream()
                         .filter(auth -> auth.startsWith("ROLE_"))
-                        .map(c -> c.replaceFirst("^ROLE_", ""))
+                        .map(auth -> auth.replaceFirst("^ROLE_", ""))
                         .collect(Collectors.collectingAndThen(Collectors.toSet(), Collections::unmodifiableSet));
-
-                Set<String> userScopes  = AuthorityUtils.authorityListToSet(context.getPrincipal().getAuthorities())
+                
+                // Extract all user scopes (SCOPE_ prefixed authorities)
+                Set<String> userScopes = AuthorityUtils.authorityListToSet(context.getPrincipal().getAuthorities())
                         .stream()
                         .filter(auth -> auth.startsWith("SCOPE_"))
-						.map(c -> c.replaceFirst("^SCOPE_", ""))
-
-						.collect(Collectors.collectingAndThen(Collectors.toSet(), Collections::unmodifiableSet));
-
-					Set<String> requestedScopes = context.getAuthorizedScopes();
-					Set<String> allowedScopes = userScopes.stream()
-							.filter(requestedScopes::contains)
-							.collect(Collectors.toSet());
-
-					claims.put("roles", roles);
-					claims.put("authorities", allowedScopes);
+                        .map(auth -> auth.replaceFirst("^SCOPE_", ""))
+                        .collect(Collectors.collectingAndThen(Collectors.toSet(), Collections::unmodifiableSet));
+                
+                // Put claims directly, no filtering against requested scopes
+                claims.put("roles", roles); 
+                claims.put("authorities", userScopes);
             });
         }
     };
-}
+	}
+
 	
 	private static KeyPair generateRsaKey() {
 		KeyPair keyPair;
