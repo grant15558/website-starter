@@ -107,5 +107,5 @@ $env:AWS_SESSION_TOKEN = ($creds | ConvertFrom-Json).Credentials.SessionToken
 ### Connect to redis: 
 
 ```
-redis-cli -u redis://Supervisor:Supervisor@localhost:63791
+redis-cli -u redis://Supervisor:Supervisor@localhost:6379
 ```
