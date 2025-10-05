@@ -60,7 +60,6 @@ docker build --rm -f ./Dockerfile.development -t <your_ecr_repo>/mysite/redis:de
 ```
 
 ### 5. Run Image Locally
-
 ```
 docker run ^
   -e AWS_SESSION_TOKEN=<token> ^
