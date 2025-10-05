@@ -1,86 +1,105 @@
-# Redis
-Redis server
 
+# Redis Server Setup
 
-Requirements:
+This project provides a Dockerized Redis server with SSL certificates managed via AWS ACM. Follow the steps below to set up and deploy Redis securely.
 
-* IAM Account
-* Permission to use AWS Services
-* Access Key, talk to Admin on generating an access key
-* Docker
+## Requirements
 
-this docker container will grab the certs from AWS ACM using CLI commands. Follow the procedure below on how to get the ACM cert using AWS CLI. To run redis, just run docker-compose.yml script. User and password are set by enviorment vars. 
+- IAM Account with permission to use AWS services
+- AWS Access Key (contact your admin to generate)
+- Docker
+- AWS CLI ([Install instructions](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions))
 
-Deployment
+## AWS CLI Installation (Windows)
 
-#### Configure SSL & AWS for Redis
+Download and install:
 
-### install AWS CLI 
-https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions
+- [AWS CLI MSI Installer](https://awscli.amazonaws.com/AWSCLIV2.msi)
+- Run: `msiexec.exe /i https://awscli.amazonaws.com/AWSCLIV2.msi`
+- Verify: `aws --version`
 
-Windows install 
+## Obtain ACM Certificate
 
-`https://awscli.amazonaws.com/AWSCLIV2.msi`
-
-`msiexec.exe /i https://awscli.amazonaws.com/AWSCLIV2.msi`
-
-`aws --version`
-
-`aws acm get-certificate --region {region} --certificate-arn arn:aws:acm:us-east-1:number:certificate/number`
-
-
-# Getting started
-
-## Production
-
-1. Create a env file in the root directory of this project.
+Run the following command to get your certificate:
 
 ```
- export REDIS_USER=Grant
- export REDIS_PASSWORD=Grant
-
+aws acm get-certificate --region <region> --certificate-arn <certificate-arn>
 ```
 
-2. Run `Docker compose up -d redis --build` 
+## Getting Started
 
+### 1. Create Environment File
 
-3. 
+Create a `.env` file in the root directory with your Redis credentials:
 
-```bash 
-    aws sts assume-role \
-  --role-arn arn:aws:iam::010928192513:role/Developer_Role \
-  --role-session-name DevSession
+```
+REDIS_USER=Supervisor
+REDIS_PASSWORD=Supervisor
 ```
 
+### 2. Build and Run Redis (Development)
 
-Build image
-`docker build --rm -f ./Dockerfile.dev -t 010928192513.dkr.ecr.us-east-1.amazonaws.com/keplara/redis:dev .`
+Run the following command to start Redis:
 
-Run image locally
-```bash
-   docker run \
-  -e AWS_SESSION_TOKEN=token \
-  -e AWS_ACCESS_KEY_ID=your-access-key \
-  -e AWS_SECRET_ACCESS_KEY=your-secret-key \
-  -e AWS_DEFAULT_REGION=us-east-1 \
-  010928192513.dkr.ecr.us-east-1.amazonaws.com/keplara/redis:dev
+```
+docker compose up -d redis-development --build
 ```
 
-Run 
+### 3. Assume AWS Role (for certificate access)
 
-ECR login before image push
-`aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 010928192513.dkr.ecr.us-east-1.amazonaws.com`
+Run this command to assume your AWS role:
 
-Push image
-`docker push 010928192513.dkr.ecr.us-east-1.amazonaws.com/keplara/redis:staging`
+```
+aws sts assume-role --role-arn arn:aws:iam::<id>:role/Developer_Role --role-session-name DevSession
+```
 
+### 4. Build Docker Image
 
-# Assume the role and capture the credentials
-creds=$(aws sts assume-role \
-  --role-arn arn:aws:iam::010928192513:role/Developer_Role \
-  --role-session-name DevSession)
+```
+docker build --rm -f ./Dockerfile.development -t <your_ecr_repo>/mysite/redis:dev .
+```
 
-# Export the temporary credentials
+### 5. Run Image Locally
+
+```
+docker run ^
+  -e AWS_SESSION_TOKEN=<token> ^
+  -e AWS_ACCESS_KEY_ID=<your-access-key> ^
+  -e AWS_SECRET_ACCESS_KEY=<your-secret-key> ^
+  -e AWS_DEFAULT_REGION=us-east-1 ^
+  <your_ecr_repo>/mysite/redis:dev
+```
+
+### 6. ECR Login & Push Image
+
+Login to ECR:
+
+```
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <your_ecr_repo>
+```
+
+Push image:
+
+```
+docker push <your_ecr_repo>/mysite/redis:staging
+```
+
+### 7. Export Temporary AWS Credentials (Linux/macOS)
+
+If using bash, after assuming the role:
+
+```
+creds=$(aws sts assume-role --role-arn arn:aws:iam::<id>:role/Developer_Role --role-session-name DevSession)
 export AWS_ACCESS_KEY_ID=$(echo $creds | jq -r .Credentials.AccessKeyId)
 export AWS_SECRET_ACCESS_KEY=$(echo $creds | jq -r .Credentials.SecretAccessKey)
 export AWS_SESSION_TOKEN=$(echo $creds | jq -r .Credentials.SessionToken)
+```
+
+On Windows PowerShell, use:
+
+```
+$creds = aws sts assume-role --role-arn arn:aws:iam::<id>:role/Developer_Role --role-session-name DevSession
+$env:AWS_ACCESS_KEY_ID = ($creds | ConvertFrom-Json).Credentials.AccessKeyId
+$env:AWS_SECRET_ACCESS_KEY = ($creds | ConvertFrom-Json).Credentials.SecretAccessKey
+$env:AWS_SESSION_TOKEN = ($creds | ConvertFrom-Json).Credentials.SessionToken
+```

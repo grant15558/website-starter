@@ -7,11 +7,6 @@ REGION="${AWS_REGION:-us-east-1}"
 # Get Redis credentials from AWS Secrets Manager
 REDIS_USER="${REDIS_USER:-$(aws secretsmanager get-secret-value --secret-id redis-secrets --region $REGION --query SecretString --output text | jq -r .username)}"
 REDIS_PASSWORD="${REDIS_PASSWORD:-$(aws secretsmanager get-secret-value --secret-id redis-secrets --region $REGION --query SecretString --output text | jq -r .password)}"
-
-
-echo "Starting Redis with user: $REDIS_USER"
-echo "Starting Redis with password: $REDIS_PASSWORD"
-
 mkdir -p /usr/local/etc/redis
 
 echo "requirepass ${REDIS_USER}" &&
