@@ -1,93 +1,143 @@
-# Mongo
+# Mongo (database) — README
 
-Requirements:
+This folder contains Docker configuration and helper commands for running MongoDB locally and building images for deployment. The container can optionally retrieve TLS certificates from AWS ACM/Secrets Manager when required.
 
-* IAM Account
-* Permission to use AWS Services
-* Access Key, talk to Admin on generating an access key
-* Docker
+## Requirements
 
-this docker container will grab the certs from AWS ACM using CLI commands. Follow the procedure below on how to get the ACM cert using AWS CLI. To run redis, just run docker-compose.yml script. User and password are set by enviorment vars. 
+- Docker and Docker Compose
+- (For TLS/certs) AWS account with permissions to read ACM and/or Secrets Manager
+- AWS CLI and jq (for scripts that parse JSON)
 
-Deployment
+## Install the AWS CLI (optional)
+See https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 
-#### AWS for MongoDB
+Windows (MSI):
 
-### install AWS CLI 
-https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions
-
-Windows install 
-
-`https://awscli.amazonaws.com/AWSCLIV2.msi`
-
-`msiexec.exe /i https://awscli.amazonaws.com/AWSCLIV2.msi`
-
-`aws --version`
-
-# Getting started
-
-## Production
-
-1. Create a env file in the root directory of this project.
-
+```powershell
+msiexec.exe /i https://awscli.amazonaws.com/AWSCLIV2.msi
+aws --version
 ```
- export MONGO_USER=Grant
- export MONGO_PASSWORD=Grant
 
-```
-Run `Docker compose up -d redis --build` 
+Linux / macOS: follow the AWS docs linked above.
 
-Build image
-`docker build --rm -f ./Dockerfile.dev -t 010928192513.dkr.ecr.us-east-1.amazonaws.com/mysite/mongodb:dev .`
+## Getting started — local development
 
-Run image locally
+1. Create an env file (or export the variables in your shell). Example `.env` or script:
+
 ```bash
-  docker run \
-  -p 27018:27018 \
-  010928192513.dkr.ecr.us-east-1.amazonaws.com/mysite/mongodb:dev
+export MONGO_USER=Supervisor
+export MONGO_PASSWORD=Supervisor
 ```
 
-Run 
+2. Start services with Docker Compose (example: only redis):
 
-ECR login before image push
-`aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 010928192513.dkr.ecr.us-east-1.amazonaws.com`
+```bash
+docker compose up -d redis --build
+```
 
-Push image
-`docker push 010928192513.dkr.ecr.us-east-1.amazonaws.com/mysite/redis:staging`
+3. To build the MongoDB image (example tag uses ECR style placeholder):
 
+```bash
+docker build --rm -f ./Dockerfile.dev -t <ACCOUNT>.dkr.ecr.us-east-1.amazonaws.com/mysite/mongodb:dev .
+```
 
-# Assume the role and capture the credentials
+4. Run the built image locally:
+
+```bash
+docker run -p 27018:27018 <ACCOUNT>.dkr.ecr.us-east-1.amazonaws.com/mysite/mongodb:dev
+```
+
+5. Push to ECR (replace `<ACCOUNT>` and ensure you are authenticated):
+
+```bash
+aws ecr get-login-password --region us-east-1 \
+  | docker login --username AWS --password-stdin <ACCOUNT>.dkr.ecr.us-east-1.amazonaws.com
+docker push <ACCOUNT>.dkr.ecr.us-east-1.amazonaws.com/mysite/mongodb:dev
+```
+
+Note: the original file referenced pushing `mysite/redis:staging`; ensure you push the correct repository/image name.
+
+## AWS: assume a role and export temporary credentials
+
+Use this snippet to assume an IAM role and set temporary environment variables in bash:
+
+```bash
 creds=$(aws sts assume-role \
-  --role-arn arn:aws:iam::010928192513:role/Developer_Role \
+  --role-arn arn:aws:iam::<ACCOUNT>:role/Developer_Role \
   --role-session-name DevSession)
 
-# Export the temporary credentials
-export AWS_ACCESS_KEY_ID=$(echo $creds | jq -r .Credentials.AccessKeyId)
-export AWS_SECRET_ACCESS_KEY=$(echo $creds | jq -r .Credentials.SecretAccessKey)
-export AWS_SESSION_TOKEN=$(echo $creds | jq -r .Credentials.SessionToken)
+export AWS_ACCESS_KEY_ID=$(echo "$creds" | jq -r .Credentials.AccessKeyId)
+export AWS_SECRET_ACCESS_KEY=$(echo "$creds" | jq -r .Credentials.SecretAccessKey)
+export AWS_SESSION_TOKEN=$(echo "$creds" | jq -r .Credentials.SessionToken)
+```
 
+Replace `<ACCOUNT>` with your AWS account ID. Keep these temporary credentials secure and do not commit them.
 
-### Optional
-db.createUser(
-  {
-    user: "GrantMitchell",
-    pwd:  passwordPrompt(),
-    roles: [ { role: "readWrite", db: "development" }]
-  }
-)
+## Retrieve TLS certificate (Secrets Manager) — example
 
-### Only for Root user and or authorized personel
-export MONGOPEM=$( aws secretsmanager get-secret-value --secret-id mongodbpem --query SecretString --output text)
+Only for authorized users (do not run unless you have permission):
 
-docker compose up -d --build mongo-staging
+```bash
+export MONGOPEM=$(aws secretsmanager get-secret-value --secret-id mongodbpem --query SecretString --output text)
+```
 
-### Checksum
-openssl sha256 -hex -out checksum.sha256 secretfile.txt
-openssl aes-256-cbc -in secretfile.txt -out secretfile.enc -e
+This assumes the secret contains the PEM bundle required by MongoDB and that your container/mounts will make it available at `/etc/ssl/mongodb/mongodb.pem`.
 
+## Creating a MongoDB user (optional)
 
+Connect to the database and run (example using the mongo shell):
+
+```js
+db.createUser({
+  user: "GrantMitchell",
+  pwd: passwordPrompt(),
+  roles: [ { role: "readWrite", db: "development" } ]
+});
+```
+
+## TLS configuration notes
+
+Example MongoDB TLS options (in `mongod.conf` or equivalent):
+
+```yaml
+net:
   tls:
     mode: requireTLS
     certificateKeyFile: /etc/ssl/mongodb/mongodb.pem
     allowConnectionsWithoutCertificates: true
-    AllowInvalidCertificates: true
+    # Note: AllowInvalidCertificates is not a standard mongod option; avoid it in production.
+```
+
+Security note: enabling `allowConnectionsWithoutCertificates` or accepting invalid certificates weakens TLS security. Only use these options for development or when you fully understand the implications.
+
+## Checksums and encryption examples
+
+Create a SHA-256 checksum and encrypt a secret file with OpenSSL (example):
+
+```bash
+openssl sha256 -binary secretfile.txt | openssl base64 > checksum.sha256
+openssl aes-256-cbc -in secretfile.txt -out secretfile.enc -pass pass:YOUR_PASSPHRASE
+```
+
+Replace `YOUR_PASSPHRASE` with a secure passphrase and manage it appropriately.
+
+## Docker Compose — staging
+
+Bring up the staging Mongo service (example):
+
+```bash
+docker compose up -d --build mongo-staging
+```
+
+## Troubleshooting & tips
+
+- Make sure Docker has enough disk space for the `mongo-data/` directory.
+- Do not commit environment files or secrets to version control.
+- If you need to extract an ACM certificate you generally must use AWS CLI + ACM Private CA or export a certificate from Secrets Manager; ACM public certificates cannot be exported.
+
+## Credits / License
+
+This repository contains helper scripts and configuration for running MongoDB in Docker. Adapt as needed for your environment.
+
+---
+If you want, I can also: add a sample `.env.example`, validate `docker-compose.yml`, or add a short troubleshooting section tailored to errors you see. Tell me which you'd like next.
