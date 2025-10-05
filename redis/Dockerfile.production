@@ -20,7 +20,7 @@ RUN pip3 install --break-system-packages awscli
 WORKDIR /redis
 EXPOSE 6379
 
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY entrypoint-production.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 CMD ["/usr/local/bin/entrypoint.sh"]
