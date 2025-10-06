@@ -7,8 +7,8 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     && apt-get clean
 
-COPY combined.pem /etc/ssl/mongodb/combined.pem
-COPY ca.pem /etc/ssl/mongodb/ca.pem
+COPY certs/mongodb.pem /etc/ssl/mongodb/mongodb.pem
+COPY certs/ca.pem /etc/ssl/mongodb/ca.pem
 
 COPY mongo-init.js /docker-entrypoint-initdb.d/mongo-init.js
 
@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y \
     jq
     
 # Upgrade pip and install awscli
-RUN pip3 install --break-system-packages awscli
+# RUN pip3 install --break-system-packages awscli
 
 COPY mongod.conf /etc/mongod.conf
 
