@@ -10,3 +10,8 @@ services:
     environment:
       - MONGO_USER=${MONGO_USER}
       - MONGO_PASSWORD=${MONGO_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
+      - ./logs:/var/log/mongodb
+volumes:
+  mongo-data:

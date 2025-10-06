@@ -141,3 +141,28 @@ This repository contains helper scripts and configuration for running MongoDB in
 
 ---
 If you want, I can also: add a sample `.env.example`, validate `docker-compose.yml`, or add a short troubleshooting section tailored to errors you see. Tell me which you'd like next.
+
+
+
+## Create TLS Cert
+
+### Create key
+openssl genrsa -out ca.key 4096
+
+### Create ca.pem
+openssl req -x509 -new -nodes -key ./ca.key -sha256 -days 365 -out ca.pem -subj "/C=US/ST=AZ/L=Phoenix/O=LocalTest/OU=Dev/CN=LocalTestCA"
+
+### Create pem 
+cat mongodb.key mongodb.crt > mongodb.pem
+
+# Generate MongoDB private key
+openssl genrsa -out mongodb.key 4096
+
+# Generate a certificate signing request (CSR)
+openssl req -new -key mongodb.key -out mongodb.csr -subj "/C=US/ST=State/L=City/O=LocalTest/OU=Dev/CN=localhost"
+
+# Sign the MongoDB CSR with your CA
+openssl x509 -req -in mongodb.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out mongodb.crt -days 365 -sha256
+
+# Combined pem
+cat mongodb.key mongodb.crt > mongodb.pem
