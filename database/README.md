@@ -29,10 +29,10 @@ export MONGO_USER=Supervisor
 export MONGO_PASSWORD=Supervisor
 ```
 
-2. Start services with Docker Compose (example: only redis):
+2. Start services with Docker Compose (example: only Mongo):
 
 ```bash
-docker compose up -d redis --build
+docker compose up -d mongo --build
 ```
 
 3. To build the MongoDB image (example tag uses ECR style placeholder):
@@ -89,7 +89,7 @@ Connect to the database and run (example using the mongo shell):
 
 ```js
 db.createUser({
-  user: "GrantMitchell",
+  user: "Supervisor",
   pwd: passwordPrompt(),
   roles: [ { role: "readWrite", db: "development" } ]
 });
