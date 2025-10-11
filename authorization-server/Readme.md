@@ -44,7 +44,7 @@ Start
 ```
 
 ## Add Settings .vscode/settings.json
-```
+```json
 {
   "java.debug.settings.onBuildFailureProceed": true,
   "java.debug.settings.enableRunDebugCodeLens": true,
@@ -58,27 +58,35 @@ Start
 
 ## Add Launch .vscode/launch.json
 
-```
+```json
 {
   "version": "0.2.0",
   "configurations": [
-
+    {
+      "type": "java",
+      "name": "Gradle SpringBoot BootDevRun",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "projectName": "auth-service",
+      "mainClass": "com.mysite.auth_service.AuthApplication",
+      "preLaunchTask": "gradle: bootRun"
+    },
     {
       "type": "java",
       "name": "Gradle SpringBoot BootRun",
       "request": "launch",
       "cwd": "${workspaceFolder}",
-      "mainClass": "${file}",
-      "projectName": "mysite",
-      "preLaunchTask": "gradle: bootRun",
+      "projectName": "auth-service",
+      "mainClass": "com.mysite.auth_service.AuthApplication",
+      "preLaunchTask": "gradle: bootRun"
     },
     {
       "type": "java",
       "name": "Debug (Gradle) SpringBoot BootTestRun",
       "request": "attach",
       "hostName": "localhost",
-      "port": 5006,
-      "projectName": "mysite",
+      "port": 5005,
+      "projectName": "auth-service",
       "preLaunchTask": "gradle: bootTestRun"
     }
   ]
@@ -86,28 +94,25 @@ Start
 ```
 
 ## Developer Role 
-```
+```bash
 aws configure
 
 aws sts assume-role --role-arn arn:aws:iam::[id]:role/Developer_Role --role-session-name client-test          
 ```
 
 
-```
-export REDIS_USER=Grant \
-export REDIS_PASSWORD=Grant \
-export MONGO_URI=mongodb://localhost:27017/development \
+```bash
+export REDIS_USER=Supervisor \
+export REDIS_PASSWORD=Supervisor \
 export JWT_KEY=Test \
 export JWT_PAYLOAD_KEY=Test \
 export PORT=8084
 
 ```
 
-
-https://medium.com/@welcometoreality2808/building-a-fullstack-application-6109cd262f8b
-
 # Generate TrustStore
-keytool -importcert \
+```shell
+  keytool -importcert \
   -file certs/ca.pem \
   -alias mongoCA \
   -keystore certs/truststore.jks \
@@ -127,3 +132,4 @@ keytool -importcert \
   -srcstoretype PKCS12 \
   -srcstorepass testpassword123 \
   -alias mongo-client
+```

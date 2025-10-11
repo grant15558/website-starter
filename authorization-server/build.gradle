@@ -30,13 +30,19 @@ repositories {
 	mavenCentral()
 }
 
+// set up a local s3 environment
 tasks.withType(JavaExec).configureEach {
-    environment 'REDIS_USER', System.getenv('REDIS_USER') ?: 'TestUser'
-	environment 'REDIS_HOST', System.getenv('REDIS_HOST') ?: 'host.docker.internal'
-    environment 'REDIS_PASSWORD', System.getenv('REDIS_PASSWORD') ?: 'TestUser'
-    environment 'MONGO_URI', System.getenv('MONGO_URI') ?: 'mongodb://localhost:27017/development'
-    environment 'JWT_KEY', System.getenv('JWT_KEY') ?: 'TestJWTKey'
-    environment 'JWT_PAYLOAD_KEY', System.getenv('JWT_PAYLOAD_KEY') ?: 'TestJWTPayloadKey'
+    environment 'REDIS_USER', System.getenv('REDIS_USER') ?: 'Supervisor'
+		environment 'REDIS_HOST', System.getenv('REDIS_HOST') ?: 'host.docker.internal'
+    environment 'REDIS_PASSWORD', System.getenv('REDIS_PASSWORD') ?: 'Supervisor'
+    environment 'MONGO_USERNAME', System.getenv('MONGO_USERNAME') ?: 'Supervisor'
+    environment 'MONGO_PASSWORD', System.getenv('MONGO_PASSWORD') ?: 'Supervisor'
+    environment 'MONGO_DATABASE', System.getenv('MONGO_DATABASE') ?: 'development'
+    environment 'MONGO_PORT', System.getenv('MONGO_PORT') ?: '27020'
+		environment 'MONGO_HOST', System.getenv('MONGO_HOST') ?: 'host.docker.internal'
+		environment 'CLIENT_REGISTRATION_SECRET', System.getenv('CLIENT_REGISTRATION_SECRET')?: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456' // This will come from AWS for key rotation. When keys are rotated the application must restart with the new keys. This can be done by an automated task.
+		environment 'JWT_KEY', System.getenv('JWT_KEY') ?: 'MyJWTKey'
+    environment 'JWT_PAYLOAD_KEY', System.getenv('JWT_PAYLOAD_KEY') ?: 'MyJWTPayloadKey'
     environment 'PORT', System.getenv('PORT') ?: '8084'
 }
 

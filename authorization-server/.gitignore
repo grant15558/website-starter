@@ -1,8 +1,8 @@
+
 HELP.md
 .gradle
 build/
 .env
-*.json
 ### STS ###
 .apt_generated
 .classpath

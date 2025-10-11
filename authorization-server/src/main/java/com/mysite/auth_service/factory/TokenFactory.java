@@ -25,10 +25,10 @@ import io.jsonwebtoken.security.SignatureException;
 @Component
 public class TokenFactory {
 
-    @Value("${jwt.secretKey}")
+    @Value("${local.jwt.secretKey}")
     private String secretKey;
 
-    @Value("${jwt.payloadKey}")
+    @Value("${local.jwt.payloadKey}")
     private String payloadKey;
 
     private AeadAlgorithm enc = Jwts.ENC.A256GCM;

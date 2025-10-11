@@ -20,7 +20,7 @@ import java.util.UUID;
 @Configuration
 public class ClientConfig {
 	// aws secret manager
-	@Value("${CLIENT_REGISTRATION_SECRET}")
+	@Value("${client.registration.secret}")
 	private String secret;
 
     @Bean

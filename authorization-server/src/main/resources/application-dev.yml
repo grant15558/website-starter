@@ -1,7 +1,6 @@
 redis:
   username: ${REDIS_USER}
   password: ${REDIS_PASSWORD}
-  
 server:
   port: ${PORT}
   ssl:
@@ -15,28 +14,19 @@ logging:
 spring:
   data:
     mongodb:
-      ssl: true
+      ssl: false
       database: ${MONGO_DB}
       username: ${MONGO_USER}
       password: ${MONGO_PASSWORD}
       host: ${MONGO_HOST}
       port: ${MONGO_PORT}
-      bundle: "${MONGO_BUNDLE}"
-    bundle:
-      jks:
-        mybundle:
-          key:
-            alias: "application"
-          keystore:
-            location: "classpath:application.p12"
-            password: "secret"
-            type: "PKCS12"
   session:
     redis:
       repository-type: default
       expiration: 60
       host: ${REDIS_HOST}
     timeout: 1m
+
 local:
   jwt:
     secretKey: ${JWT_KEY}
