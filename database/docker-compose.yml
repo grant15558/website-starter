@@ -4,7 +4,7 @@ services:
   mongo:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.production
     ports:
       - "27020:27019"
     environment:
@@ -13,5 +13,18 @@ services:
     volumes:
       - mongo-data:/data/db
       - ./logs:/var/log/mongodb
+    mongo-development:
+        build:
+          context: .
+          dockerfile: Dockerfile.development
+        ports:
+          - "27020:27019"
+        environment:
+          - MONGO_USER=${MONGO_USER}
+          - MONGO_PASSWORD=${MONGO_PASSWORD}
+        volumes:
+          - mongo-development-data:/data/db
+          - ./logs:/var/log/mongodb
 volumes:
   mongo-data:
+  mongo-development-data:
