@@ -174,3 +174,19 @@ This project follows the repository license. See the top-level `LICENSE` file fo
 ---
 
 If you'd like, I can also add a small `docker-compose.override.yml` that uses environment variables for credentials, or add an example `mc` script to automate bucket creation and uploads. 
+
+
+In the `certs` bucket, create the following folder structure to organize public and internal certificates:
+
+```shell
+certs/
+├─ public/
+│  ├─ admin/      ← admin.mysite.com
+│  └─ user/       ← mysite.com
+└─ internal/
+   ├─ mongo/      ← mongo.mysite.com
+   ├─ redis/      ← redis.mysite.com
+   └─ webserver/  ← internal.mysite.com
+```
+
+Place the certificate files (for example, `fullchain.pem` and `privkey.pem`) inside the appropriate subfolder for each host.
