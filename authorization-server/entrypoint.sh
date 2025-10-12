@@ -1,4 +1,6 @@
 #!/bin/sh
+
+# This is for the web app ssl not mongo
 exec java \
   -Djavax.net.debug=all \
   -Djavax.net.ssl.trustStore=/certs/truststore.jks \

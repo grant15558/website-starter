@@ -120,16 +120,70 @@ export PORT=8084
   -noprompt
 
   openssl pkcs12 -export \
-  -in combined.pem \
-  -out keystore.p12 \
+  -in certs/fullchain.pem \
+  -out certs/keystore.p12 \
   -name mongo-client \
   -password pass:testpassword123
 
   keytool -importkeystore \
-  -destkeystore keystore.jks \
+  -destkeystore certs/keystore.jks \
   -deststorepass testpassword123 \
-  -srckeystore keystore.p12 \
+  -srckeystore certs/keystore.p12 \
   -srcstoretype PKCS12 \
   -srcstorepass testpassword123 \
   -alias mongo-client
 ```
+
+1) Inspect the keystore / truststore
+
+List entries (replace <storepass> with your store password):
+
+```bash
+keytool -list -v -keystore certs/keystore.jks -storepass <storepass>
+keytool -list -v -keystore certs/truststore.jks -storepass <storepass>
+```
+
+This shows aliases (for example `mongo-client`, `mongoCA`) and fingerprints so you can identify which alias to export.
+
+2) Quick conversion & extraction (parameterized)
+
+If you need to convert a JKS keystore to PKCS#12 and extract certificate/key materials, the steps below use placeholders — replace `testpassword123`, `mongo-client` and file names with your values.
+
+```bash
+# convert JKS -> PKCS12
+keytool -importkeystore \
+  -srckeystore certs/keystore.jks \
+  -srcstorepass <storepass> \
+  -srcstoretype JKS \
+  -destkeystore certs/keystore.p12 \
+  -deststoretype PKCS12 \
+  -deststorepass <storepass> \
+  -alias <alias>
+
+# extract client cert (PEM)
+openssl pkcs12 -in certs/keystore.p12 -clcerts -nokeys \
+  -out certs/cert.pem -passin pass:<storepass>
+
+# extract private key (PEM) — note: -nodes writes an unencrypted key
+openssl pkcs12 -in certs/keystore.p12 -nocerts -nodes \
+  -out certs/key.pem -passin pass:<storepass>
+
+# extract CA certs (if present)
+openssl pkcs12 -in certs/keystore.p12 -cacerts -nokeys \
+  -out certs/ca-from-p12.pem -passin pass:<storepass>
+
+# or export CA from a JKS truststore and convert DER -> PEM
+keytool -exportcert -alias <ca-alias> \
+  -keystore certs/truststore.jks -storepass <storepass> \
+  -file certs/ca.der
+openssl x509 -inform der -in certs/ca.der -out certs/ca.pem
+
+# (optional) concatenate into a single combined PEM: cert, key, CA
+cat certs/cert.pem certs/key.pem certs/ca.pem > certs/fullchain.pem
+chmod 600 certs/fullchain.pem
+```
+
+Notes:
+- Replace all placeholder values (`<storepass>`, `<alias>`, `<ca-alias>`) before running.
+- Avoid writing unencrypted private keys when possible. If you omit `-nodes` OpenSSL will prompt for a passphrase.
+- Protect private key files (e.g. `chmod 600`).
