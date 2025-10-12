@@ -165,4 +165,4 @@ openssl req -new -key mongodb.key -out mongodb.csr -subj "/C=US/ST=State/L=City/
 openssl x509 -req -in mongodb.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out mongodb.crt -days 365 -sha256
 
 # Combined pem
-cat mongodb.key mongodb.crt > mongodb.pem
+cat mongodb.key mongodb.crt > fullchain.pem

@@ -88,8 +88,8 @@ docker-compose up -d
 - S3 API endpoint: http://localhost:9000
 - Web UI / Console: http://localhost:9001
 - Default root credentials (development only):
-  - User: `minioadmin`
-  - Password: `minioadmin`
+  - User: `Supervisor`
+  - Password: `Supervisor`
 
 Change these values for any non-local or shared environment — do not use these defaults in production.
 
@@ -188,5 +188,17 @@ certs/
    ├─ redis/      ← redis.mysite.com
    └─ webserver/  ← internal.mysite.com
 ```
+
+
+For example, in the mongo folder under internal, place the files below:
+```shell
+├─ca.pem
+├─fullchain.pem
+├─keystore.jks
+├─keystore.p12
+├─truststore.jks
+```
+- it is possible that you may need less or more of these files, it depends on your setup with certs.
+
 
 Place the certificate files (for example, `fullchain.pem` and `privkey.pem`) inside the appropriate subfolder for each host.
