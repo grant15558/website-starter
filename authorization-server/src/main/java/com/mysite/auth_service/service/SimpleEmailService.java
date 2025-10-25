@@ -25,16 +25,14 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import lombok.NonNull;
 
-
 @Service
 public class SimpleEmailService {
-	@Value("${local.email}")
-	private EmailProperties emailProperties;
+    private EmailProperties emailProperties;
 
-        public SimpleEmailService() {
-        }
+    public SimpleEmailService() {
+    }
 
-         public void sendEmail(String emailAddress, String subject, @NonNull String body)
+    public void sendEmail(String emailAddress, String subject, @NonNull String body)
             throws AuthApiException {
 
         if ("ses".equalsIgnoreCase(emailProperties.getMode())) {
@@ -83,15 +81,15 @@ public class SimpleEmailService {
         Session session = Session.getInstance(props);
 
         try {
-                MimeMessage message = new MimeMessage(session);
-                message.setFrom(new InternetAddress("no-reply@mysite.com"));
-                message.setRecipients(MimeMessage.RecipientType.TO,
-                        InternetAddress.parse(emailAddress));
-                message.setSubject(subject);
-                message.setContent(body, "text/html");
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("no-reply@mysite.com"));
+            message.setRecipients(MimeMessage.RecipientType.TO,
+                    InternetAddress.parse(emailAddress));
+            message.setSubject(subject);
+            message.setContent(body, "text/html");
 
-                // Send
-                Transport.send(message);
+            // Send
+            Transport.send(message);
 
         } catch (MessagingException e) {
             throw new AuthApiException("Failed to send email via SMTP");

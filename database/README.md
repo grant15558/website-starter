@@ -142,27 +142,58 @@ This repository contains helper scripts and configuration for running MongoDB in
 ---
 If you want, I can also: add a sample `.env.example`, validate `docker-compose.yml`, or add a short troubleshooting section tailored to errors you see. Tell me which you'd like next.
 
-
-
-## Create TLS Cert
-
-### Create key
+<!-- server and client certs need to be figured out -->
+## 1️⃣ Create CA
 openssl genrsa -out ca.key 4096
+openssl req -x509 -new -nodes -key ca.key -sha256 -days 365 -out ca.pem -subj "/C=US/ST=AZ/L=Phoenix/O=LocalTest/OU=Dev/CN=LocalTestCA"
 
-### Create ca.pem
-openssl req -x509 -new -nodes -key ./ca.key -sha256 -days 365 -out ca.pem -subj "/C=US/ST=AZ/L=Phoenix/O=LocalTest/OU=Dev/CN=LocalTestCA"
+---
 
-### Create pem 
-cat mongodb.key mongodb.crt > mongodb.pem
-
-# Generate MongoDB private key
+## 2️⃣ Create MongoDB server certificate
+# Generate server private key
 openssl genrsa -out mongodb.key 4096
 
-# Generate a certificate signing request (CSR)
-openssl req -new -key mongodb.key -out mongodb.csr -subj "/C=US/ST=State/L=City/O=LocalTest/OU=Dev/CN=localhost"
+# Generate server CSR
+openssl req -new -key mongodb.key -out mongodb.csr -subj "/C=US/ST=AZ/L=Phoenix/O=LocalTest/OU=Dev/CN=localhost"
 
-# Sign the MongoDB CSR with your CA
+# Sign server CSR with CA
 openssl x509 -req -in mongodb.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out mongodb.crt -days 365 -sha256
 
-# Combined pem
-cat mongodb.key mongodb.crt > fullchain.pem
+# Combine server key + cert for Mongo
+cat mongodb.key mongodb.crt > mongodb.pem
+
+## 3️⃣ Create Client certificate for your Spring Boot app
+# Generate client private key
+openssl genrsa -out client.key 4096
+
+# Generate client CSR
+openssl req -new -key client.key -out client.csr -subj "/C=US/ST=AZ/L=Phoenix/O=LocalTest/OU=Dev/CN=mongo-client"
+
+# Sign client CSR with the same CA
+openssl x509 -req -in client.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out client.crt -days 365 -sha256
+
+# Optional: combine client cert + key for PKCS12
+openssl pkcs12 -export \
+  -in client.crt \
+  -inkey client.key \
+  -certfile ca.pem \
+  -out keystore.p12 \
+  -name mongo-client \
+  -password pass:testpassword123
+
+# Convert to JKS (if needed)
+keytool -importkeystore \
+  -destkeystore keystore.jks \
+  -deststorepass testpassword123 \
+  -srckeystore keystore.p12 \
+  -srcstoretype PKCS12 \
+  -srcstorepass testpassword123 \
+  -alias mongo-client
+
+## 4️⃣ Create Truststore for verifying Mongo server
+keytool -importcert \
+  -file ca.pem \
+  -alias mongoCA \
+  -keystore truststore.jks \
+  -storepass testpassword123 \
+  -noprompt

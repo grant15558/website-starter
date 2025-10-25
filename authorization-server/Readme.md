@@ -12,33 +12,37 @@ Start
 		{
             "label": "gradle: bootRun",
             "type": "shell",
-            "command": "./gradlew",
+            "command": "./gradlew bootRun --args='--spring.profiles.active=dev'",
             "options": {
                 "env": {
-                    "AWS_ACCESS_KEY_ID": "",
-                    "AWS_SECRET_ACCESS_KEY": "",
-                    "AWS_SESSION_TOKEN": ""
-                }
-            },
+                     "AWS_ACCESS_KEY_ID": "",
+                     "AWS_SECRET_ACCESS_KEY": "",
+                     "AWS_SESSION_TOKEN": "",    
+                     "AWS_S3_BUCKET": "certificates" 
+                       }
+                },
             "group": {
                 "kind": "build",
                 "isDefault": true
               }
         },
-		 {
-            "label": "gradle: bootTestRun",
+        {
+            "label": "gradle: bootRunProduction",
             "type": "shell",
-            "command": "./gradlew",
+            "command": "./gradlew bootRun --args='--spring.profiles.active=prod'",
             "options": {
                 "env": {
-                }
-            }
-        },
-        {
-            "label": "Run My Command",
-            "type": "shell",
-            "command": "echo 'Hello World!'"
-          }
+                     "AWS_ACCESS_KEY_ID": "",
+                     "AWS_SECRET_ACCESS_KEY": "",
+                     "AWS_SESSION_TOKEN": "",    
+                     "AWS_S3_BUCKET": "certificates" 
+                       }
+                },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+              }
+        }
 	]
 }
 ```

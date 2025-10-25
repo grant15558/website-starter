@@ -4,7 +4,7 @@ redis:
 server:
   port: ${PORT}
   ssl:
-    enabled: true
+    enabled: false
 logging:
   level:
     org:
@@ -15,7 +15,7 @@ spring:
   data:
     mongodb:
       ssl: false
-      database: ${MONGO_DB}
+      database: ${MONGO_DATABASE}
       username: ${MONGO_USER}
       password: ${MONGO_PASSWORD}
       host: ${MONGO_HOST}
