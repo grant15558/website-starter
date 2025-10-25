@@ -25,15 +25,15 @@ import io.jsonwebtoken.security.SignatureException;
 @Component
 public class TokenFactory {
 
-    @Value("${jwt.secretKey}")
+    @Value("${local.jwt.secretKey}")
     private String secretKey;
-    
-    @Value("${jwt.payloadKey}")
+
+    @Value("${local.jwt.payloadKey}")
     private String payloadKey;
 
     private AeadAlgorithm enc = Jwts.ENC.A256GCM;
     private Password payloadPassword;
-    
+
     KeyAlgorithm<Password, Password> alg = Jwts.KEY.PBES2_HS512_A256KW;
 
     private SecretKey getSigningKey() {
@@ -41,12 +41,15 @@ public class TokenFactory {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
     }
 
-    public String createToken(Integer expirationMinutes, Claims claims, Boolean encryptPayload){
-        Date date = Date.from(LocalDateTime.now().plusMinutes(expirationMinutes).atZone(ZoneId.systemDefault()).toInstant());
-        if (encryptPayload){
-            return Jwts.builder().issuer("MySite").expiration(date).issuedAt(new Date()).encryptWith(Keys.password(payloadKey.toCharArray()), alg, enc).claims(claims).compact();
+    public String createToken(Integer expirationMinutes, Claims claims, Boolean encryptPayload) {
+        Date date = Date
+                .from(LocalDateTime.now().plusMinutes(expirationMinutes).atZone(ZoneId.systemDefault()).toInstant());
+        if (encryptPayload) {
+            return Jwts.builder().issuer("MySite").expiration(date).issuedAt(new Date())
+                    .encryptWith(Keys.password(payloadKey.toCharArray()), alg, enc).claims(claims).compact();
         } else {
-            return Jwts.builder().issuer("MySite").expiration(date).issuedAt(new Date()).signWith(getSigningKey()).claims(claims).compact();
+            return Jwts.builder().issuer("MySite").expiration(date).issuedAt(new Date()).signWith(getSigningKey())
+                    .claims(claims).compact();
         }
     }
 
@@ -58,14 +61,12 @@ public class TokenFactory {
             return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
         } catch (MalformedJwtException malformedJwtException) {
             throw new AuthApiException("The token has been manipulated and for this reason it is rejected.");
-        }
-        catch (SignatureException signatureException) {
+        } catch (SignatureException signatureException) {
             throw new AuthApiException("The signature has been changed and is not valid.");
-        }
-        catch (UnsupportedJwtException unsupportedJwtException) {
+        } catch (UnsupportedJwtException unsupportedJwtException) {
             try {
                 return Jwts.parser().decryptWith(payloadPassword).build().parseEncryptedClaims(token).getPayload();
-            } catch (Exception exception){
+            } catch (Exception exception) {
                 throw new AuthApiException("Token not authorized.");
             }
         }
