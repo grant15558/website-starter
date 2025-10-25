@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:MySite": "node ./dist/MySite/server/server.mjs"
+    "serve:ssr:Mysite": "node ./dist/Mysite/server/server.mjs"
   },
   "private": true,
   "dependencies": {
