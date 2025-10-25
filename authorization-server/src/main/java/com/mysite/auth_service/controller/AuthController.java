@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AuthController {
 	private final AuthService authService;
 	private final TokenService tokenService;
-
 	private final SimpleEmailService simpleEmailService;
 
 	private RedisTemplate<String, String> redisTemplate;

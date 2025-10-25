@@ -7,11 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-<<<<<<< HEAD
     "serve:ssr:Mysite": "node ./dist/Mysite/server/server.mjs"
-=======
-    "serve:ssr:MySite": "node ./dist/MySite/server/server.mjs"
->>>>>>> 548d3b2 (Added files:)
   },
   "private": true,
   "dependencies": {

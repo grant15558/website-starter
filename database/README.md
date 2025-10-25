@@ -105,6 +105,7 @@ net:
     mode: requireTLS
     certificateKeyFile: /etc/ssl/mongodb/mongodb.pem
     allowConnectionsWithoutCertificates: true
+<<<<<<< HEAD
     # Note: AllowInvalidCertificates is not a standard mongod option; avoid it in production.
 ```
 
@@ -197,3 +198,6 @@ keytool -importcert \
   -keystore truststore.jks \
   -storepass testpassword123 \
   -noprompt
+=======
+    AllowInvalidCertificates: true
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842

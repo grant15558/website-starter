@@ -32,7 +32,11 @@ export function app(): express.Express {
   }));
 
   // Register client
+<<<<<<< HEAD
   
+=======
+  // Retrieve product API routes here to feed client
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
   
 
   // All regular routes use the Angular engine

@@ -22,7 +22,11 @@
 # No
 # -
 # No
+<<<<<<< HEAD
 # [id]
+=======
+# 010928192513
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
 # test-subnet-public1-us-east-1a
 # subnet-0b9aaeba8e5c83791
 # Available
@@ -43,18 +47,24 @@
 # -
 # No
 <<<<<<< HEAD
+<<<<<<< HEAD
 # [id]
 # Mysite-public-production-us-east-1a
 # subnet-0b983fb751d2d54f9
 # Available
 # vpc-087c467583cbe6a78 | Mysite-vpc
 =======
+=======
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
 # 010928192513
 # MySite-public-production-us-east-1a
 # subnet-0b983fb751d2d54f9
 # Available
 # vpc-087c467583cbe6a78 | MySite-vpc
+<<<<<<< HEAD
 >>>>>>> 548d3b2 (Added files:)
+=======
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
 # Off
 # 172.0.0.0/22
 # –
@@ -64,10 +74,14 @@
 # use1-az1
 # us-east-1
 <<<<<<< HEAD
+<<<<<<< HEAD
 # rtb-05101f4e8285fce81 | Mysite-rtb-public
 =======
 # rtb-05101f4e8285fce81 | MySite-rtb-public
 >>>>>>> 548d3b2 (Added files:)
+=======
+# rtb-05101f4e8285fce81 | MySite-rtb-public
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
 # acl-09fab435f999aaaea
 # No
 # No
@@ -75,18 +89,24 @@
 # -
 # No
 <<<<<<< HEAD
+<<<<<<< HEAD
 # [id]
 # Mysite-public-production-us-east-1b
 # subnet-0b7534ff3627e1705
 # Available
 # vpc-087c467583cbe6a78 | Mysite-vpc
 =======
+=======
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
 # 010928192513
 # MySite-public-production-us-east-1b
 # subnet-0b7534ff3627e1705
 # Available
 # vpc-087c467583cbe6a78 | MySite-vpc
+<<<<<<< HEAD
 >>>>>>> 548d3b2 (Added files:)
+=======
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
 # Off
 # 172.0.16.0/22
 # –
@@ -96,10 +116,14 @@
 # use1-az2
 # us-east-1
 <<<<<<< HEAD
+<<<<<<< HEAD
 # rtb-05101f4e8285fce81 | Mysite-rtb-public
 =======
 # rtb-05101f4e8285fce81 | MySite-rtb-public
 >>>>>>> 548d3b2 (Added files:)
+=======
+# rtb-05101f4e8285fce81 | MySite-rtb-public
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
 # acl-09fab435f999aaaea
 # No
 # No
@@ -107,18 +131,24 @@
 # -
 # No
 <<<<<<< HEAD
+<<<<<<< HEAD
 # [id]
 # Mysite-public-staging-us-east-1d
 # subnet-07a71a6b51b1fa0a0
 # Available
 # vpc-087c467583cbe6a78 | Mysite-vpc
 =======
+=======
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
 # 010928192513
 # MySite-public-staging-us-east-1d
 # subnet-07a71a6b51b1fa0a0
 # Available
 # vpc-087c467583cbe6a78 | MySite-vpc
+<<<<<<< HEAD
 >>>>>>> 548d3b2 (Added files:)
+=======
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
 # Off
 # 172.0.5.0/24
 # –
@@ -128,10 +158,14 @@
 # use1-az6
 # us-east-1
 <<<<<<< HEAD
+<<<<<<< HEAD
 # rtb-0512ddc0693b34530 | Mysite-public-staging-rtb
 =======
 # rtb-0512ddc0693b34530 | MySite-public-staging-rtb
 >>>>>>> 548d3b2 (Added files:)
+=======
+# rtb-0512ddc0693b34530 | MySite-public-staging-rtb
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
 # acl-09fab435f999aaaea
 # No
 # No
@@ -139,18 +173,24 @@
 # -
 # No
 <<<<<<< HEAD
+<<<<<<< HEAD
 # [id]
 # Mysite-private1-us-east-1a
 # subnet-078f46bafc87dff00
 # Available
 # vpc-087c467583cbe6a78 | Mysite-vpc
 =======
+=======
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
 # 010928192513
 # MySite-private1-us-east-1a
 # subnet-078f46bafc87dff00
 # Available
 # vpc-087c467583cbe6a78 | MySite-vpc
+<<<<<<< HEAD
 >>>>>>> 548d3b2 (Added files:)
+=======
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
 # Off
 # 172.0.128.0/22
 # –
@@ -161,12 +201,18 @@ provider "aws" {
 
 resource "aws_ecs_cluster" "my_cluster" {
 <<<<<<< HEAD
+<<<<<<< HEAD
   name = "Mysite" # Ensure this matches your actual ECS cluster name
 =======
   name = "MySite" # Ensure this matches your actual ECS cluster name
 >>>>>>> 548d3b2 (Added files:)
   service_connect_defaults {
     namespace = "arn:aws:servicediscovery:us-east-1:[id]:namespace/ns-ys66gqljqhrnedlg"
+=======
+  name = "MySite" # Ensure this matches your actual ECS cluster name
+  service_connect_defaults {
+    namespace = "arn:aws:servicediscovery:us-east-1:010928192513:namespace/ns-ys66gqljqhrnedlg"
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
   }
   setting {
     name  = "containerInsights"
@@ -176,10 +222,14 @@ resource "aws_ecs_cluster" "my_cluster" {
 
 resource "aws_ecs_service" "my_service" {
 <<<<<<< HEAD
+<<<<<<< HEAD
   name = "MysiteClientProduction"
 =======
   name = "MySiteClientProduction"
 >>>>>>> 548d3b2 (Added files:)
+=======
+  name = "MySiteClientProduction"
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
 
   availability_zone_rebalancing      = "ENABLED"
   desired_count                      = 1
@@ -193,16 +243,22 @@ resource "aws_ecs_service" "my_service" {
   scheduling_strategy   = "REPLICA"
   wait_for_steady_state = true
 <<<<<<< HEAD
+<<<<<<< HEAD
   task_definition       = "MysiteClientProduction:17"
   capacity_provider_strategy {
     base              = 0
     capacity_provider = "MysiteCapacityProvider"
 =======
+=======
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
   task_definition       = "MySiteClientProduction:17"
   capacity_provider_strategy {
     base              = 0
     capacity_provider = "MySiteCapacityProvider"
+<<<<<<< HEAD
 >>>>>>> 548d3b2 (Added files:)
+=======
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
     weight            = 1
   }
   deployment_circuit_breaker {
@@ -216,10 +272,14 @@ resource "aws_ecs_service" "my_service" {
     container_name   = "Client"
     container_port   = 80
 <<<<<<< HEAD
+<<<<<<< HEAD
     target_group_arn = "arn:aws:elasticloadbalancing:us-east-1:[id]:targetgroup/MysiteClientProduction-tg/ae04ea2e63cdbc00"
 =======
     target_group_arn = "arn:aws:elasticloadbalancing:us-east-1:010928192513:targetgroup/MySiteClientProduction-tg/ae04ea2e63cdbc00"
 >>>>>>> 548d3b2 (Added files:)
+=======
+    target_group_arn = "arn:aws:elasticloadbalancing:us-east-1:010928192513:targetgroup/MySiteClientProduction-tg/ae04ea2e63cdbc00"
+>>>>>>> 047533d2310d240cda3111ee3bf9fefc34944842
   }
 
   network_configuration {
